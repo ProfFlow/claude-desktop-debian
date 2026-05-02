@@ -13,6 +13,7 @@ The [`docs/learnings/`](docs/learnings/) directory contains hard-won technical k
 - [`plugin-install.md`](docs/learnings/plugin-install.md) — Anthropic & Partners plugin install flow, gate logic, backend endpoints, and DevTools recipes
 - [`apt-worker-architecture.md`](docs/learnings/apt-worker-architecture.md) — APT/DNF binary distribution via Cloudflare Worker + GitHub Releases, redirect chain, credential ownership, heartbeat runbook
 - [`tray-rebuild-race.md`](docs/learnings/tray-rebuild-race.md) — why destroy + recreate on `nativeTheme` updates briefly duplicates the tray icon on KDE Plasma, and the in-place `setImage` + `setContextMenu` fast-path that avoids the SNI re-registration race
+- [`test-harness-electron-hooks.md`](docs/learnings/test-harness-electron-hooks.md) — why constructor-level `BrowserWindow` wraps are silently bypassed by `frame-fix-wrapper`'s Proxy, and the prototype-method hook pattern that works (used by the Quick Entry test runners)
 
 ## Code Style
 
