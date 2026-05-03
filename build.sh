@@ -7,7 +7,7 @@
 
 # Global variables (set by functions, used throughout)
 architecture=''
-distro_family=''  # debian, rpm, nix, or unknown
+distro_family=''  # debian, rpm, suse, nix, or unknown
 claude_download_url=''
 claude_exe_sha256=''
 claude_exe_filename=''
@@ -198,7 +198,11 @@ print_next_steps() {
 					alt_cmd="sudo dpkg -i $final_output_path"
 				else
 					pkg_type='RPM'
-					install_cmd="sudo dnf install $final_output_path"
+					if [[ $distro_family == 'suse' ]]; then
+						install_cmd="sudo zypper install $final_output_path"
+					else
+						install_cmd="sudo dnf install $final_output_path"
+					fi
 					alt_cmd="sudo rpm -i $final_output_path"
 				fi
 				echo -e "To install the $pkg_type package, run:"

@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-- Linux distribution (Debian/Ubuntu, Fedora/RHEL, or other)
+- Linux distribution (Debian/Ubuntu, Fedora/RHEL, openSUSE, or other)
 - Git
 - Basic build tools (automatically installed by the script)
 
@@ -37,6 +37,7 @@ The build script automatically detects your distribution and selects the appropr
 |--------------|----------------|-----------------|
 | Debian, Ubuntu, Mint | `.deb` | apt |
 | Fedora, RHEL, CentOS | `.rpm` | dnf |
+| openSUSE Leap, Tumbleweed | `.rpm` | zypper |
 | NixOS | `nix` | nix |
 | Arch Linux | `.AppImage` (via AUR) | yay/paru |
 | Other | `.AppImage` | - |
@@ -57,6 +58,13 @@ sudo apt --fix-broken install
 
 ```bash
 sudo dnf install ./claude-desktop-VERSION-1.ARCH.rpm
+# Or: sudo rpm -i ./claude-desktop-VERSION-1.ARCH.rpm
+```
+
+### For .rpm packages (openSUSE Leap/Tumbleweed)
+
+```bash
+sudo zypper install ./claude-desktop-VERSION-1.ARCH.rpm
 # Or: sudo rpm -i ./claude-desktop-VERSION-1.ARCH.rpm
 ```
 

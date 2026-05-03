@@ -1,6 +1,6 @@
 # Claude Desktop for Linux
 
-This project provides build scripts to run Claude Desktop natively on Linux systems. It repackages the official Windows application for Linux distributions, producing `.deb` packages (Debian/Ubuntu), `.rpm` packages (Fedora/RHEL), distribution-agnostic AppImages, an [AUR package](https://aur.archlinux.org/packages/claude-desktop-appimage) for Arch Linux, and a Nix flake for NixOS.
+This project provides build scripts to run Claude Desktop natively on Linux systems. It repackages the official Windows application for Linux distributions, producing `.deb` packages (Debian/Ubuntu), `.rpm` packages (Fedora/RHEL/openSUSE), distribution-agnostic AppImages, an [AUR package](https://aur.archlinux.org/packages/claude-desktop-appimage) for Arch Linux, and a Nix flake for NixOS.
 
 **Note:** This is an unofficial build script. For official support, please visit [Anthropic's website](https://www.anthropic.com). For issues with the build script or Linux implementation, please [open an issue](https://github.com/aaddrick/claude-desktop-debian/issues) in this repository.
 
@@ -65,6 +65,23 @@ sudo dnf install claude-desktop
 ```
 
 Future updates will be installed automatically with your regular system updates (`sudo dnf upgrade`).
+
+### Using Zypper Repository (openSUSE - Recommended)
+
+The DNF repository is rpm-md format and works with `zypper` too:
+
+```bash
+# Add the repository (zypper reads the same repo file format as dnf)
+sudo zypper addrepo https://pkg.claude-desktop-debian.dev/rpm/claude-desktop.repo
+
+# Refresh and trust the GPG key (will prompt to import on first install)
+sudo zypper refresh
+
+# Install
+sudo zypper install claude-desktop
+```
+
+Future updates ship via `sudo zypper update`.
 
 #### Migrating from the old `aaddrick.github.io` URL
 
@@ -258,6 +275,7 @@ Special thanks to:
 - **[HumboldtJoker](https://github.com/HumboldtJoker)** for diagnosing the cowork Patch 2b silent failure on Claude Desktop 1.5354.0 — identifying that the log line was patched but session init still routed through the Swift addon (#553)
 - **[zabka](https://github.com/zabka)** for identifying that `cowork-vm-service.js` was never auto-spawned on Linux and contributing a systemd-unit workaround that scoped the daemon auto-launch fix (#445)
 - **[sirfaber](https://github.com/sirfaber)** for fixing the `$`-in-minified-identifier breakage of cowork Patch 2b (vm module assignment) and Patch 6 step 2 (retry-delay auto-launch) on Claude Desktop 1.5354.0 (#555)
+- **[ProfFlow](https://github.com/ProfFlow)** for adding openSUSE/SUSE distribution support — `/etc/os-release`-based detection, zypper dependency installation, Tumbleweed `7zip` package mapping, and SUSE-aware launcher and `--doctor` hints (#565)
 
 ## Sponsorship
 

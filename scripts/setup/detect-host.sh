@@ -51,6 +51,13 @@ detect_distro() {
 	section_header 'Distribution Detection'
 	echo 'Detecting Linux distribution family...'
 
+	# Read os-release once for SUSE detection (no /etc/SUSE-release file exists)
+	local os_release_id='' os_release_id_like=''
+	if [[ -r /etc/os-release ]]; then
+		os_release_id=$(grep -oP '^ID=\K.*' /etc/os-release | tr -d '"')
+		os_release_id_like=$(grep -oP '^ID_LIKE=\K.*' /etc/os-release | tr -d '"')
+	fi
+
 	if [[ -f /etc/debian_version ]]; then
 		distro_family='debian'
 		echo "Detected Debian-based distribution"
@@ -63,6 +70,10 @@ detect_distro() {
 		distro_family='rpm'
 		echo "Detected Red Hat-based distribution"
 		echo "  $(cat /etc/redhat-release)"
+	elif [[ $os_release_id == opensuse* || $os_release_id == suse* || \
+			$os_release_id == sles || $os_release_id_like == *suse* ]]; then
+		distro_family='suse'
+		echo "Detected SUSE-based distribution (uses RPM via zypper)"
 	elif [[ -f /etc/NIXOS ]]; then
 		distro_family='nix'
 		echo "Detected NixOS"
@@ -136,7 +147,7 @@ parse_arguments() {
 	# Set default build format based on detected distro
 	case "$distro_family" in
 		debian) build_format='deb' ;;
-		rpm) build_format='rpm' ;;
+		rpm|suse) build_format='rpm' ;;
 		nix) build_format='nix' ;;
 		*) build_format='appimage' ;;
 	esac
@@ -206,7 +217,7 @@ parse_arguments() {
 	# Warn if building native package for wrong distro
 	if [[ $build_format == 'deb' && $distro_family != 'debian' ]]; then
 		echo "Warning: Building .deb package on non-Debian system ($distro_family). This may fail." >&2
-	elif [[ $build_format == 'rpm' && $distro_family != 'rpm' ]]; then
+	elif [[ $build_format == 'rpm' && $distro_family != 'rpm' && $distro_family != 'suse' ]]; then
 		echo "Warning: Building .rpm package on non-RPM system ($distro_family). This may fail." >&2
 	fi
 	if [[ $cleanup_action != 'yes' && $cleanup_action != 'no' ]]; then

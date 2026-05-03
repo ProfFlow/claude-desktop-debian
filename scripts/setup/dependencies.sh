@@ -33,6 +33,13 @@ check_dependencies() {
 		[icotool]='icoutils' [convert]='ImageMagick'
 		[dpkg-deb]='dpkg' [rpmbuild]='rpm-build'
 	)
+	# openSUSE Tumbleweed retired 'p7zip'; the '7zip' package now provides
+	# /usr/bin/p7zip and /usr/bin/7z. Use it on all SUSE-family distros.
+	declare -A suse_pkgs=(
+		[p7zip]='7zip' [wget]='wget' [wrestool]='icoutils'
+		[icotool]='icoutils' [convert]='ImageMagick'
+		[dpkg-deb]='dpkg' [rpmbuild]='rpm-build'
+	)
 
 	local cmd
 	for cmd in $all_deps; do
@@ -43,6 +50,9 @@ check_dependencies() {
 					;;
 				rpm)
 					deps_to_install="$deps_to_install ${rpm_pkgs[$cmd]}"
+					;;
+				suse)
+					deps_to_install="$deps_to_install ${suse_pkgs[$cmd]}"
 					;;
 				*)
 					echo "Warning: Cannot auto-install '$cmd' on unknown distro. Please install manually." >&2
@@ -86,6 +96,13 @@ check_dependencies() {
 				# shellcheck disable=SC2086
 				if ! $sudo_cmd dnf install -y $deps_to_install; then
 					echo "Failed to install dependencies using 'dnf install'." >&2
+					exit 1
+				fi
+				;;
+			suse)
+				# shellcheck disable=SC2086
+				if ! $sudo_cmd zypper --non-interactive install $deps_to_install; then
+					echo "Failed to install dependencies using 'zypper install'." >&2
 					exit 1
 				fi
 				;;

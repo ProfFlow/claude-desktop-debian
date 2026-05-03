@@ -54,6 +54,8 @@ _cowork_pkg_hint() {
 	case "$distro" in
 		debian|ubuntu) pkg_cmd='sudo apt install' ;;
 		fedora)        pkg_cmd='sudo dnf install' ;;
+		opensuse-tumbleweed|opensuse-leap|opensuse|sles)
+			pkg_cmd='sudo zypper install' ;;
 		arch)          pkg_cmd='sudo pacman -S' ;;
 		*)
 			printf '%s' "Install $tool using your package manager"
@@ -68,6 +70,8 @@ _cowork_pkg_hint() {
 			case "$distro" in
 				debian|ubuntu) pkg='qemu-system-x86 qemu-utils' ;;
 				fedora)        pkg='qemu-kvm qemu-img' ;;
+				opensuse-tumbleweed|opensuse-leap|opensuse|sles)
+					pkg='qemu-x86 qemu-tools' ;;
 				arch)          pkg='qemu-full' ;;
 			esac
 			;;
